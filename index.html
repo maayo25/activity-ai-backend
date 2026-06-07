@@ -3,421 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Laptop Finder & Visualizer</title>
+    <title>Rekomendasi Laptop Sesuai Kebutuhan</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #6366f1;
-            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            --input-bg: rgba(15, 23, 42, 0.6);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-
-        body {
-            background: var(--bg-gradient);
-            color: var(--text-main);
-            min-height: 100vh;
-            padding: 3rem 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            padding: 3rem;
-            border-radius: 24px;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.75rem;
-            letter-spacing: -0.05em;
-        }
-
-        p.subtitle {
-            color: var(--text-muted);
-            font-size: 1rem;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.5;
-        }
-
-        /* Grid Sistem untuk Preferensi */
-        .preference-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.25rem;
-            margin-bottom: 1.5rem;
-        }
-
-        @media (max-width: 640px) {
-            .preference-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        input, select, textarea {
-            background: var(--input-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-main);
-            padding: 0.85rem 1rem;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-        }
-
-        /* Slider Budget */
-        .budget-container {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        input[type="range"] {
-            padding: 0;
-            height: 6px;
-            background: var(--input-bg);
-            accent-color: var(--accent);
-        }
-
-        .budget-value {
-            font-weight: 700;
-            color: #a855f7;
-            min-width: 100px;
-            text-align: right;
-        }
-
-        textarea {
-            height: 100px;
-            resize: none;
-        }
-
-        /* Tombol Aksi Gradasi */
-        button {
-            width: 100%;
-            background: var(--accent-gradient);
-            color: white;
-            border: none;
-            padding: 1rem;
-            font-size: 1rem;
-            font-weight: 700;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: transform 0.2s ease, opacity 0.2s ease;
-            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
-            margin-top: 1rem;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            opacity: 0.95;
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        button:disabled {
-            background: #475569;
-            box-shadow: none;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Animasi Loading Pulsa */
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 2rem 0;
-            font-weight: 600;
-            color: var(--text-muted);
-            animation: pulse 1.5s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; color: #a855f7; }
-        }
-
-        /* Tampilan Hasil */
-        #result-section {
-            display: none;
-            margin-top: 3rem;
-            border-top: 1px solid var(--card-border);
-            padding-top: 2rem;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result-title {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-        }
-
-        .laptop-image-container {
-            width: 100%;
-            height: 380px;
-            background-color: var(--input-bg);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin-bottom: 2rem;
-            border: 1px solid var(--card-border);
-            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-        }
-
-        .laptop-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .image-placeholder {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Spinner Kecil untuk Gambar */
-        .spinner {
-            border: 3px solid rgba(255,255,255,0.1);
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border-left-color: var(--accent);
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .recommendation-text {
-            line-height: 1.8;
-            font-size: 1.05rem;
-            white-space: pre-line;
-            background: rgba(15, 23, 42, 0.3);
-            padding: 1.5rem;
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.05);
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 font-sans min-h-screen">
 
-    <div class="container">
-        <header>
-            <h1>AI Laptop Finder & Visualizer</h1>
-            <p class="subtitle">Sistem rekomendasi berbasis kecerdasan buatan terintegrasi dengan OpenAI GPT & Generasi Gambar DALL-E</p>
-        </header>
+    <header class="gradient-bg text-white py-8 px-4 shadow-md text-center">
+        <h1 class="text-3xl font-bold">Bagaimana Merekomendasikan Laptop Sesuai Kebutuhan Pengguna</h1>
+        <p class="text-indigo-100 mt-2">Input preferensi Anda, simpan data, dan gunakan AI untuk analisis mendalam.</p>
+    </header>
 
-        <!-- Formulir Data Preferensi Baru -->
-        <div class="preference-grid">
-            <div class="form-group">
-                <label for="usage-type">Kategori Penggunaan</label>
-                <select id="usage-type">
-                    <option value="Koding & Pengembangan Perangkat Lunak">Koding / Mahasiswa IT</option>
-                    <option value="Desain Grafis, Editing Video & Rendering">Desain Grafis & Video</option>
-                    <option value="Gaming Berat & Streaming">Gaming Kompetitif</option>
-                    <option value="Office Ringan, Administrasi & Kuliah Umum">Sederhana / Office / Tugas Sekolah</option>
-                    <option value="Bisnis Eksekutif & Portabilitas Tinggi">Bisnis & Mobilitas Tinggi</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="brand-preference">Preferensi Merek (Opsional)</label>
-                <select id="brand-preference">
-                    <option value="Bebas merek apa saja">Bebas / Rekomendasi AI</option>
-                    <option value="Utamakan ASUS atau ROG">ASUS</option>
-                    <option value="Utamakan Lenovo atau ThinkPad">Lenovo</option>
-                    <option value="Utamakan Apple MacBook">Apple (MacBook)</option>
-                    <option value="Utamakan HP atau Acer">HP / Acer</option>
-                    <option value="Utamakan MSI atau Gigabyte">MSI / Gigabyte</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="os-preference">Sistem Operasi</label>
-                <select id="os-preference">
-                    <option value="Windows">Windows</option>
-                    <option value="MacOS">MacOS</option>
-                    <option value="Linux / Bebas">Bebas OS</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="budget">Maksimal Budget</label>
-                <div class="budget-container">
-                    <input type="range" id="budget" min="5" max="50" value="15" step="1">
-                    <div class="budget-value" id="budget-display">15 Juta</div>
+    <main class="max-w-5xl mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-xl shadow-md h-fit">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Tambah Preferensi</h2>
+            <form id="laptopForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Kategori Penggunaan</label>
+                    <select id="kategori" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="Gaming">Gaming / Editing Berat</option>
+                        <option value="Kerja/Kuliah">Kerja / Kuliah (Office)</option>
+                        <option value="Programming">Programming / Developer</option>
+                        <option value="Desain Grafis">Desain Grafis / Kreatif</option>
+                    </select>
                 </div>
-            </div>
-
-            <div class="form-group full-width">
-                <label for="needs">Detail Tambahan Spesifik (Kebutuhan Khusus)</label>
-                <textarea id="needs" placeholder="Contoh: Saya butuh layar yang sudah sRGB 100%, baterai tahan lebih dari 8 jam, dan bobot di bawah 1.5kg karena sering dibawa ke kampus..."></textarea>
-            </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Merk yang Diinginkan</label>
+                    <input type="text" id="merk" placeholder="Contoh: ASUS, Lenovo, Apple" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Maksimal Budget (Rupiah)</label>
+                    <input type="number" id="budget" placeholder="Contoh: 15000000" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500" required>
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition shadow">
+                    Simpan & Tampilkan
+                </button>
+            </form>
         </div>
 
-        <button id="submit-btn">Analisis & Generate Visual</button>
-
-        <div class="loading" id="loader">Kecerdasan buatan sedang meramu spesifikasi & memvisualisasikan produk...</div>
-
-        <!-- Section Hasil -->
-        <div id="result-section">
-            <h2 class="result-title">⚡ Hasil Rekomendasi Eksklusif</h2>
-            
-            <div class="laptop-image-container">
-                <div id="image-status" class="image-placeholder">
-                    <div class="spinner"></div>
-                    <span>Menghasilkan rendering produk via DALL-E...</span>
+        <div class="md:col-span-2 space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Data Preferensi Anda</h2>
+                <div id="dataDisplay" class="hidden border border-gray-100 p-4 rounded-lg bg-gray-50 space-y-2">
+                    <p class="text-gray-700"><strong>Kategori:</strong> <span id="resKategori">-</span></p>
+                    <p class="text-gray-700"><strong>Merk Preferensi:</strong> <span id="resMerk">-</span></p>
+                    <p class="text-gray-700"><strong>Budget:</strong> Rp <span id="resBudget">-</span></p>
+                    
+                    <div class="pt-4 flex flex-wrap gap-3">
+                        <button id="btnAi" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium py-2 px-4 rounded transition flex items-center gap-2 shadow">
+                            ✨ Analisis AI (OpenAI)
+                        </button>
+                        <button id="btnImage" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded transition flex items-center gap-2 shadow">
+                            🖼️ Generate Image Laptop
+                        </button>
+                    </div>
                 </div>
-                <img id="laptop-img" src="" alt="Rekomendasi Visual Laptop" style="display: none;">
+                <p id="emptyState" class="text-gray-400 text-center py-6">Belum ada data yang disimpan.</p>
             </div>
 
-            <div class="recommendation-text" id="recommendation-output"></div>
+            <div id="aiResultContainer" class="hidden bg-white p-6 rounded-xl shadow-md space-y-4">
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2">Hasil Rekomendasi AI</h3>
+                
+                <div id="loader" class="hidden text-center py-4">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
+                    <p class="text-sm text-gray-500 mt-2">Sedang memproses permintaan Anda...</p>
+                </div>
+
+                <div id="aiOutput" class="text-gray-700 whitespace-pre-line leading-relaxed text-sm"></div>
+                
+                <div id="imageOutput" class="hidden mt-4 pt-4 border-t border-gray-100">
+                    <h4 class="text-sm font-semibold text-gray-600 mb-2">Visualisasi Laptop Rekomendasi:</h4>
+                    <img id="generatedImg" src="" alt="Generated Laptop" class="w-full max-w-md rounded-lg shadow mx-auto">
+                </div>
+            </div>
         </div>
-    </div>
+    </main>
 
     <script>
-        // Logika Slider Budget Kontrol Dynamic UI
-        const budgetSlider = document.getElementById('budget');
-        const budgetDisplay = document.getElementById('budget-display');
-        
-        budgetSlider.addEventListener('input', (e) => {
-            budgetDisplay.innerText = e.target.value + ' Juta';
+        let currentData = null;
+
+        const form = document.getElementById('laptopForm');
+        const dataDisplay = document.getElementById('dataDisplay');
+        const emptyState = document.getElementById('emptyState');
+        const aiResultContainer = document.getElementById('aiResultContainer');
+        const loader = document.getElementById('loader');
+        const aiOutput = document.getElementById('aiOutput');
+        const imageOutput = document.getElementById('imageOutput');
+        const generatedImg = document.getElementById('generatedImg');
+
+        // Form Submit Handler (DOM Manipulation)
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            currentData = {
+                kategori: document.getElementById('kategori').value,
+                merk: document.getElementById('merk').value,
+                budget: Number(document.getElementById('budget').value).toLocaleString('id-ID')
+            };
+
+            // Update DOM
+            document.getElementById('resKategori').innerText = currentData.kategori;
+            document.getElementById('resMerk').innerText = currentData.merk;
+            document.getElementById('resBudget').innerText = currentData.budget;
+
+            emptyState.classList.add('hidden');
+            dataDisplay.classList.remove('hidden');
+            aiResultContainer.classList.add('hidden'); // Reset hasil AI sebelumnya
         });
 
-        // Event Handler Submit Data ke Serverless API
-        document.getElementById('submit-btn').addEventListener('click', async () => {
-            const usageType = document.getElementById('usage-type').value;
-            const brandPref = document.getElementById('brand-preference').value;
-            const osPref = document.getElementById('os-preference').value;
-            const maxBudget = budgetSlider.value;
-            const extraNeeds = document.getElementById('needs').value.trim();
-
-            // Formulasi Prompt Terstruktur Menggabungkan Form Preferensi Baru
-            const structuredPrompt = `
-                Kategori Utama: ${usageType}.
-                Preferensi Brand: ${brandPref}.
-                Sistem Operasi: ${osPref}.
-                Maksimal Budget: Rp ${maxBudget} Juta.
-                Catatan Tambahan Pengguna: ${extraNeeds ? extraNeeds : 'Tidak ada catatan tambahan.'}
-            `.trim();
-
-            const submitBtn = document.getElementById('submit-btn');
-            const loader = document.getElementById('loader');
-            const resultSection = document.getElementById('result-section');
-            const outputText = document.getElementById('recommendation-output');
-            const laptopImg = document.getElementById('laptop-img');
-            const imageStatus = document.getElementById('image-status');
-
-            // Reset UI State
-            submitBtn.disabled = true;
-            loader.style.display = 'block';
-            resultSection.style.display = 'none';
-            laptopImg.style.display = 'none';
-            imageStatus.style.display = 'flex';
+        // Trigger OpenAI Analysis
+        document.getElementById('btnAi').addEventListener('click', async () => {
+            if(!currentData) return;
+            
+            aiResultContainer.classList.remove('hidden');
+            loader.classList.remove('hidden');
+            aiOutput.innerText = '';
 
             try {
-                // 1. Kirim prompt terstruktur ke serverless function /api/analyze.js
-                const analyzeRes = await fetch('/api/analyze', {
+                const response = await fetch('/api/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: structuredPrompt })
+                    body: JSON.stringify(currentData)
                 });
-                const analyzeData = await analyzeRes.json();
+                const result = await response.json();
                 
-                if(!analyzeRes.ok) throw new Error(analyzeData.error || 'Gagal menganalisis preferensi');
-
-                // Tampilkan text deskripsi rekomendasi laptop
-                resultSection.style.display = 'block';
-                outputText.innerText = analyzeData.result;
-
-                // 2. Buat Prompt Gambar yang sangat estetik untuk DALL-E /api/generate-image.js
-                const imagePrompt = `A high-end, clean studio product photograph of a modern tech laptop optimized for ${usageType}. Sleek design, cinematic lighting, dark minimalistic backdrop, 8k resolution, professional tech gadget commercial rendering.`;
-                
-                const imageRes = await fetch('/api/generate-image', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: imagePrompt })
-                });
-                const imageData = await imageRes.json();
-
-                if(imageRes.ok && imageData.imageUrl) {
-                    laptopImg.src = imageData.imageUrl;
-                    laptopImg.style.display = 'block';
-                    imageStatus.style.display = 'none';
+                if(response.ok) {
+                    aiOutput.innerText = result.answer;
                 } else {
-                    imageStatus.innerHTML = "<span>⚠️ Visual gagal dimuat, namun spesifikasi teks di bawah siap dibaca.</span>";
+                    aiOutput.innerText = `Error: ${result.error || 'Gagal menganalisis'}`;
                 }
-
-            } catch (error) {
-                alert('Waktu request habis atau terjadi kesalahan: ' + error.message);
-                console.error(error);
+            } catch (err) {
+                aiOutput.innerText = `Terjadi kesalahan koneksi: ${err.message}`;
             } finally {
-                submitBtn.disabled = false;
-                loader.style.display = 'none';
+                loader.classList.add('hidden');
+            }
+        });
+
+        // Trigger Image Generation
+        document.getElementById('btnImage').addEventListener('click', async () => {
+            if(!currentData) return;
+
+            aiResultContainer.classList.remove('hidden');
+            loader.classList.remove('hidden');
+            imageOutput.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/generate-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ kategori: currentData.kategori, merk: currentData.merk })
+                });
+                const result = await response.json();
+
+                if(response.ok) {
+                    generatedImg.src = result.imageUrl;
+                    imageOutput.classList.remove('hidden');
+                } else {
+                    alert(`Gagal generate gambar: ${result.error}`);
+                }
+            } catch (err) {
+                alert(`Terjadi kesalahan koneksi: ${err.message}`);
+            } finally {
+                loader.classList.add('hidden');
             }
         });
     </script>
