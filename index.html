@@ -3,137 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rekomendasi Laptop AI</title>
+    <title>AI Laptop Finder & Visualizer</title>
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --background: #f8fafc;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-            --text-light: #64748b;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #6366f1;
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --input-bg: rgba(15, 23, 42, 0.6);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background-color: var(--background);
-            color: var(--text);
-            padding: 2rem 1rem;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 3rem 1rem;
             display: flex;
             justify-content: center;
+            align-items: center;
         }
 
         .container {
-            max-width: 700px;
+            max-width: 800px;
             width: 100%;
             background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
         }
 
         h1 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            text-align: center;
-            color: #0f172a;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.05em;
         }
 
         p.subtitle {
-            text-align: center;
-            color: var(--text-light);
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
         }
 
-        .form-group {
+        /* Grid Sistem untuk Preferensi */
+        .preference-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
             margin-bottom: 1.5rem;
         }
 
+        @media (max-width: 640px) {
+            .preference-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
         label {
-            display: block;
+            font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input, select, textarea {
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Slider Budget */
+        .budget-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        input[type="range"] {
+            padding: 0;
+            height: 6px;
+            background: var(--input-bg);
+            accent-color: var(--accent);
+        }
+
+        .budget-value {
+            font-weight: 700;
+            color: #a855f7;
+            min-width: 100px;
+            text-align: right;
         }
 
         textarea {
-            width: 100%;
-            height: 120px;
-            padding: 0.75rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
+            height: 100px;
             resize: none;
-            font-size: 1rem;
-            transition: border-color 0.2s;
         }
 
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 213, 0.1);
-        }
-
+        /* Tombol Aksi Gradasi */
         button {
             width: 100%;
-            background-color: var(--primary);
+            background: var(--accent-gradient);
             color: white;
             border: none;
-            padding: 0.75rem;
+            padding: 1rem;
             font-size: 1rem;
-            font-weight: 600;
-            border-radius: 8px;
+            font-weight: 700;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+            margin-top: 1rem;
         }
 
         button:hover {
-            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         button:disabled {
-            background-color: #94a3b8;
+            background: #475569;
+            box-shadow: none;
             cursor: not-allowed;
+            transform: none;
         }
 
+        /* Animasi Loading Pulsa */
         .loading {
             display: none;
             text-align: center;
-            margin: 1.5rem 0;
-            color: var(--primary);
-            font-weight: 500;
+            margin: 2rem 0;
+            font-weight: 600;
+            color: var(--text-muted);
+            animation: pulse 1.5s infinite ease-in-out;
         }
 
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; color: #a855f7; }
+        }
+
+        /* Tampilan Hasil */
         #result-section {
             display: none;
-            margin-top: 2.5rem;
-            border-top: 2px dashed #e2e8f0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--card-border);
             padding-top: 2rem;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .result-title {
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
-            color: #0f172a;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
         }
 
         .laptop-image-container {
             width: 100%;
-            height: 350px;
-            background-color: #f1f5f9;
-            border-radius: 12px;
+            height: 380px;
+            background-color: var(--input-bg);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            margin-bottom: 1.5rem;
-            border: 1px solid #e2e8f0;
+            margin-bottom: 2rem;
+            border: 1px solid var(--card-border);
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
         }
 
         .laptop-image-container img {
@@ -143,51 +232,138 @@
         }
 
         .image-placeholder {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            text-align: center;
-            padding: 1rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
         }
 
+        /* Spinner Kecil untuk Gambar */
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.1);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border-left-color: var(--accent);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         .recommendation-text {
-            line-height: 1.7;
-            font-size: 1rem;
+            line-height: 1.8;
+            font-size: 1.05rem;
             white-space: pre-line;
+            background: rgba(15, 23, 42, 0.3);
+            padding: 1.5rem;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Rekomendasi Laptop AI</h1>
-        <p class="subtitle">Bagaimana merekomendasikan laptop sesuai kebutuhan pengguna dengan dukungan OpenAI dan fitur generasi gambar produk</p>
+        <header>
+            <h1>AI Laptop Finder & Visualizer</h1>
+            <p class="subtitle">Sistem rekomendasi berbasis kecerdasan buatan terintegrasi dengan OpenAI GPT & Generasi Gambar DALL-E</p>
+        </header>
 
-        <div class="form-group">
-            <label for="needs">Ceritakan kebutuhan laptop Anda:</label>
-            <textarea id="needs" placeholder="Contoh: Saya seorang mahasiswa teknik informatika yang butuh laptop untuk coding, sesekali edit video ringan, dan baterainya awet. Budget sekitar 12 jutaan..."></textarea>
-        </div>
-
-        <button id="submit-btn">Dapatkan Rekomendasi</button>
-
-        <div class="loading" id="loader">Sedang menganalisis kebutuhan dan merancang visual laptop...</div>
-
-        <div id="result-section">
-            <h2 class="result-title">Laptop yang Direkomendasikan</h2>
-            
-            <div class="laptop-image-container">
-                <div id="image-status" class="image-placeholder">Membuat visual produk...</div>
-                <img id="laptop-img" src="" alt="Rekomendasi Laptop" style="display: none;">
+        <!-- Formulir Data Preferensi Baru -->
+        <div class="preference-grid">
+            <div class="form-group">
+                <label for="usage-type">Kategori Penggunaan</label>
+                <select id="usage-type">
+                    <option value="Koding & Pengembangan Perangkat Lunak">Koding / Mahasiswa IT</option>
+                    <option value="Desain Grafis, Editing Video & Rendering">Desain Grafis & Video</option>
+                    <option value="Gaming Berat & Streaming">Gaming Kompetitif</option>
+                    <option value="Office Ringan, Administrasi & Kuliah Umum">Sederhana / Office / Tugas Sekolah</option>
+                    <option value="Bisnis Eksekutif & Portabilitas Tinggi">Bisnis & Mobilitas Tinggi</option>
+                </select>
             </div>
 
-            <div class="recommendation-text" id="recommendation-output">
+            <div class="form-group">
+                <label for="brand-preference">Preferensi Merek (Opsional)</label>
+                <select id="brand-preference">
+                    <option value="Bebas merek apa saja">Bebas / Rekomendasi AI</option>
+                    <option value="Utamakan ASUS atau ROG">ASUS</option>
+                    <option value="Utamakan Lenovo atau ThinkPad">Lenovo</option>
+                    <option value="Utamakan Apple MacBook">Apple (MacBook)</option>
+                    <option value="Utamakan HP atau Acer">HP / Acer</option>
+                    <option value="Utamakan MSI atau Gigabyte">MSI / Gigabyte</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="os-preference">Sistem Operasi</label>
+                <select id="os-preference">
+                    <option value="Windows">Windows</option>
+                    <option value="MacOS">MacOS</option>
+                    <option value="Linux / Bebas">Bebas OS</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="budget">Maksimal Budget</label>
+                <div class="budget-container">
+                    <input type="range" id="budget" min="5" max="50" value="15" step="1">
+                    <div class="budget-value" id="budget-display">15 Juta</div>
                 </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="needs">Detail Tambahan Spesifik (Kebutuhan Khusus)</label>
+                <textarea id="needs" placeholder="Contoh: Saya butuh layar yang sudah sRGB 100%, baterai tahan lebih dari 8 jam, dan bobot di bawah 1.5kg karena sering dibawa ke kampus..."></textarea>
+            </div>
+        </div>
+
+        <button id="submit-btn">Analisis & Generate Visual</button>
+
+        <div class="loading" id="loader">Kecerdasan buatan sedang meramu spesifikasi & memvisualisasikan produk...</div>
+
+        <!-- Section Hasil -->
+        <div id="result-section">
+            <h2 class="result-title">⚡ Hasil Rekomendasi Eksklusif</h2>
+            
+            <div class="laptop-image-container">
+                <div id="image-status" class="image-placeholder">
+                    <div class="spinner"></div>
+                    <span>Menghasilkan rendering produk via DALL-E...</span>
+                </div>
+                <img id="laptop-img" src="" alt="Rekomendasi Visual Laptop" style="display: none;">
+            </div>
+
+            <div class="recommendation-text" id="recommendation-output"></div>
         </div>
     </div>
 
     <script>
+        // Logika Slider Budget Kontrol Dynamic UI
+        const budgetSlider = document.getElementById('budget');
+        const budgetDisplay = document.getElementById('budget-display');
+        
+        budgetSlider.addEventListener('input', (e) => {
+            budgetDisplay.innerText = e.target.value + ' Juta';
+        });
+
+        // Event Handler Submit Data ke Serverless API
         document.getElementById('submit-btn').addEventListener('click', async () => {
-            const needsText = document.getElementById('needs').value.trim();
-            if (!needsText) return alert('Silakan isi kebutuhan Anda terlebih dahulu!');
+            const usageType = document.getElementById('usage-type').value;
+            const brandPref = document.getElementById('brand-preference').value;
+            const osPref = document.getElementById('os-preference').value;
+            const maxBudget = budgetSlider.value;
+            const extraNeeds = document.getElementById('needs').value.trim();
+
+            // Formulasi Prompt Terstruktur Menggabungkan Form Preferensi Baru
+            const structuredPrompt = `
+                Kategori Utama: ${usageType}.
+                Preferensi Brand: ${brandPref}.
+                Sistem Operasi: ${osPref}.
+                Maksimal Budget: Rp ${maxBudget} Juta.
+                Catatan Tambahan Pengguna: ${extraNeeds ? extraNeeds : 'Tidak ada catatan tambahan.'}
+            `.trim();
 
             const submitBtn = document.getElementById('submit-btn');
             const loader = document.getElementById('loader');
@@ -196,32 +372,30 @@
             const laptopImg = document.getElementById('laptop-img');
             const imageStatus = document.getElementById('image-status');
 
-            // Reset view
+            // Reset UI State
             submitBtn.disabled = true;
             loader.style.display = 'block';
-            resultSection.style.style = 'none';
+            resultSection.style.display = 'none';
             laptopImg.style.display = 'none';
-            imageStatus.style.display = 'block';
-            imageStatus.innerText = "Membuat visual produk...";
+            imageStatus.style.display = 'flex';
 
             try {
-                // 1. Panggil API Analisis Kebutuhan
+                // 1. Kirim prompt terstruktur ke serverless function /api/analyze.js
                 const analyzeRes = await fetch('/api/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: needsText })
+                    body: JSON.stringify({ prompt: structuredPrompt })
                 });
                 const analyzeData = await analyzeRes.json();
                 
-                if(!analyzeRes.ok) throw new Error(analyzeData.error || 'Gagal menganalisis data');
+                if(!analyzeRes.ok) throw new Error(analyzeData.error || 'Gagal menganalisis preferensi');
 
-                // Tampilkan text rekomendasi
+                // Tampilkan text deskripsi rekomendasi laptop
                 resultSection.style.display = 'block';
                 outputText.innerText = analyzeData.result;
 
-                // 2. Panggil API Generasi Gambar berdasarkan tipe laptop yang direkomendasikan
-                // Kita ambil 100 karakter pertama hasil analisis untuk dijadikan prompt gambar yang relevan
-                const imagePrompt = `A professional product photography of a modern laptop setup that matches: ${needsText}. Sleek design, photorealistic, 4k, studio lighting.`;
+                // 2. Buat Prompt Gambar yang sangat estetik untuk DALL-E /api/generate-image.js
+                const imagePrompt = `A high-end, clean studio product photograph of a modern tech laptop optimized for ${usageType}. Sleek design, cinematic lighting, dark minimalistic backdrop, 8k resolution, professional tech gadget commercial rendering.`;
                 
                 const imageRes = await fetch('/api/generate-image', {
                     method: 'POST',
@@ -235,11 +409,11 @@
                     laptopImg.style.display = 'block';
                     imageStatus.style.display = 'none';
                 } else {
-                    imageStatus.innerText = "Gagal memuat gambar produk, namun teks rekomendasi tetap tersedia.";
+                    imageStatus.innerHTML = "<span>⚠️ Visual gagal dimuat, namun spesifikasi teks di bawah siap dibaca.</span>";
                 }
 
             } catch (error) {
-                alert('Terjadi kesalahan: ' + error.message);
+                alert('Waktu request habis atau terjadi kesalahan: ' + error.message);
                 console.error(error);
             } finally {
                 submitBtn.disabled = false;
