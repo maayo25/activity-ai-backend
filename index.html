@@ -6,12 +6,12 @@
     <title>Rekomendasi Laptop AI</title>
     <style>
         :root {
-            --primary-color: #2563eb;
+            --primary: #2563eb;
             --primary-hover: #1d4ed8;
-            --bg-color: #f8fafc;
+            --background: #f8fafc;
             --card-bg: #ffffff;
-            --text-color: #1e293b;
-            --border-color: #e2e8f0;
+            --text: #1e293b;
+            --text-light: #64748b;
         }
 
         * {
@@ -22,79 +22,70 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px;
+            background-color: var(--background);
+            color: var(--text);
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px 0;
-        }
-
-        header h1 {
-            font-size: 2rem;
-            color: #0f172a;
-            margin-bottom: 10px;
-        }
-
-        header p {
-            color: #64748b;
-        }
-
-        .card {
+            max-width: 700px;
+            width: 100%;
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            margin-bottom: 24px;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            color: #0f172a;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
 
         label {
             display: block;
             font-weight: 600;
-            margin-bottom: 8px;
-            color: #334155;
-        }
-
-        textarea, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            background-color: #fff;
-            transition: border-color 0.2s;
-        }
-
-        textarea:focus, select:focus {
-            outline: none;
-            border-color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
 
         textarea {
-            resize: vertical;
-            min-height: 100px;
+            width: 100%;
+            height: 120px;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            resize: none;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 213, 0.1);
         }
 
         button {
             width: 100%;
-            background-color: var(--primary-color);
+            background-color: var(--primary);
             color: white;
             border: none;
-            padding: 14px;
+            padding: 0.75rem;
             font-size: 1rem;
             font-weight: 600;
             border-radius: 8px;
@@ -111,218 +102,150 @@
             cursor: not-allowed;
         }
 
-        /* Loading Spinner */
         .loading {
             display: none;
             text-align: center;
-            margin: 20px 0;
+            margin: 1.5rem 0;
+            color: var(--primary);
+            font-weight: 500;
         }
 
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--border-color);
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Result Section */
-        .result-box {
+        #result-section {
             display: none;
+            margin-top: 2.5rem;
+            border-top: 2px dashed #e2e8f0;
+            padding-top: 2rem;
         }
 
-        .result-header {
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 12px;
-            margin-bottom: 16px;
+        .result-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #0f172a;
         }
 
-        .product-image-container {
+        .laptop-image-container {
             width: 100%;
             height: 350px;
-            border-radius: 8px;
+            background-color: #f1f5f9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
-            background-color: #e2e8f0;
-            margin-bottom: 20px;
-            position: relative;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
         }
 
-        .product-image {
+        .laptop-image-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .ai-badge {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            background: rgba(15, 23, 42, 0.8);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            backdrop-filter: blur(4px);
+        .image-placeholder {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 1rem;
         }
 
         .recommendation-text {
+            line-height: 1.7;
+            font-size: 1rem;
             white-space: pre-line;
-            color: #334155;
-            font-size: 1.05rem;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>Sistem Rekomendasi Laptop AI</h1>
-        <p>Temukan laptop ideal Anda menggunakan analisis OpenAI &amp; Generasi Gambar Produk</p>
-    </header>
-
-    <div class="card">
-        <div class="form-group">
-            <label for="userBudget">Berapa budget Anda? (Rupiah)</label>
-            <select id="userBudget">
-                <option value="Di bawah 7 Juta">Di bawah Rp 7.000.000 (Entry Level)</option>
-                <option value="7 sampai 15 Juta" selected>Rp 7.000.000 - Rp 15.000.000 (Mid-Range)</option>
-                <option value="15 sampai 25 Juta">Rp 15.000.000 - Rp 25.000.000 (High-End)</option>
-                <option value="Di atas 25 Juta">Di atas Rp 25.000.000 (Sultan / Profesional)</option>
-            </select>
-        </div>
+    <div class="container">
+        <h1>Rekomendasi Laptop AI</h1>
+        <p class="subtitle">Bagaimana merekomendasikan laptop sesuai kebutuhan pengguna dengan dukungan OpenAI dan fitur generasi gambar produk</p>
 
         <div class="form-group">
-            <label for="userNeeds">Ceritakan kebutuhan penggunaan laptop Anda secara detail:</label>
-            <textarea id="userNeeds" placeholder="Contoh: Saya seorang mahasiswa teknik informatika. Saya butuh laptop yang lancar untuk coding, menjalankan emulator Android, sekadar editing video ringan untuk tugas, dan sesekali main game seperti Valorant. Saya butuh yang baterainya awet."></textarea>
+            <label for="needs">Ceritakan kebutuhan laptop Anda:</label>
+            <textarea id="needs" placeholder="Contoh: Saya seorang mahasiswa teknik informatika yang butuh laptop untuk coding, sesekali edit video ringan, dan baterainya awet. Budget sekitar 12 jutaan..."></textarea>
         </div>
 
-        <button id="btnSubmit" onclick="generateRecommendation()">Dapatkan Rekomendasi Laptop</button>
-    </div>
+        <button id="submit-btn">Dapatkan Rekomendasi</button>
 
-    <div id="loading" class="loading">
-        <div class="spinner"></div>
-        <p id="loadingText">Menganalisis kebutuhan Anda dengan OpenAI...</p>
-    </div>
+        <div class="loading" id="loader">Sedang menganalisis kebutuhan dan merancang visual laptop...</div>
 
-    <div id="resultCard" class="card result-box">
-        <div class="result-header">
-            <h2>Rekomendasi Laptop Terbaik Untuk Anda</h2>
-        </div>
-        
-        <div class="product-image-container">
-            <span class="ai-badge">Gambar AI Generated</span>
-            <img id="productImg" class="product-image" src="" alt="Visualisasi Laptop Rekomendasi">
-        </div>
-
-        <div id="recommendationOutput" class="recommendation-text">
+        <div id="result-section">
+            <h2 class="result-title">Laptop yang Direkomendasikan</h2>
+            
+            <div class="laptop-image-container">
+                <div id="image-status" class="image-placeholder">Membuat visual produk...</div>
+                <img id="laptop-img" src="" alt="Rekomendasi Laptop" style="display: none;">
             </div>
+
+            <div class="recommendation-text" id="recommendation-output">
+                </div>
+        </div>
     </div>
-</div>
 
-<script>
-    // GANTI DENGAN API KEY OPENAI ANDA JIKA INGIN MENGGUNAKAN LIVE DATA
-    const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"; 
+    <script>
+        document.getElementById('submit-btn').addEventListener('click', async () => {
+            const needsText = document.getElementById('needs').value.trim();
+            if (!needsText) return alert('Silakan isi kebutuhan Anda terlebih dahulu!');
 
-    async function generateRecommendation() {
-        const budget = document.getElementById('userBudget').value;
-        const needs = document.getElementById('userNeeds').value;
-        const btnSubmit = document.getElementById('btnSubmit');
-        const loading = document.getElementById('loading');
-        const loadingText = document.getElementById('loadingText');
-        const resultCard = document.getElementById('resultCard');
-        
-        if (!needs.trim()) {
-            alert("Harap isi deskripsi kebutuhan laptop Anda terlebih dahulu!");
-            return;
-        }
+            const submitBtn = document.getElementById('submit-btn');
+            const loader = document.getElementById('loader');
+            const resultSection = document.getElementById('result-section');
+            const outputText = document.getElementById('recommendation-output');
+            const laptopImg = document.getElementById('laptop-img');
+            const imageStatus = document.getElementById('image-status');
 
-        // Setup UI State Loading
-        btnSubmit.disabled = true;
-        resultCard.style.display = 'none';
-        loading.style.display = 'block';
-        loadingText.innerText = "Meminta kecerdasan OpenAI menganalisis spesifikasi...";
+            // Reset view
+            submitBtn.disabled = true;
+            loader.style.display = 'block';
+            resultSection.style.style = 'none';
+            laptopImg.style.display = 'none';
+            imageStatus.style.display = 'block';
+            imageStatus.innerText = "Membuat visual produk...";
 
-        // Prompt rekayasa untuk OpenAI
-        const promptSystem = "Anda adalah seorang pakar spesialis hardware komputer dan laptop yang objektif.";
-        const promptUser = `Rekomendasikan 1 merk & tipe laptop spesifik yang paling cocok untuk kebutuhan berikut:\n\nBudget: ${budget}\nKebutuhan Pengguna: ${needs}\n\nFormat output harus rapi:\n1. Nama Laptop (Gunakan huruf tebal)\n2. Spesifikasi Utama (CPU, GPU, RAM, Storage, Layar)\n3. Alasan mengapa laptop ini sangat cocok untuk deskripsi kebutuhan di atas.`;
-
-        try {
-            let recommendationText = "";
-            let laptopKeywords = "modern laptop sleek"; // Default untuk fallback gambar
-
-            // Cek jika API Key diisi, jalankan request ke OpenAI
-            if (OPENAI_API_KEY !== "YOUR_OPENAI_API_KEY" && OPENAI_API_KEY.trim() !== "") {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            try {
+                // 1. Panggil API Analisis Kebutuhan
+                const analyzeRes = await fetch('/api/analyze', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${OPENAI_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        model: "gpt-3.5-turbo", // Bisa diganti ke gpt-4o jika API Key mendukung
-                        messages: [
-                            { role: "system", content: promptSystem },
-                            { role: "user", content: promptUser }
-                        ],
-                        temperature: 0.7
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: needsText })
                 });
+                const analyzeData = await analyzeRes.json();
+                
+                if(!analyzeRes.ok) throw new Error(analyzeData.error || 'Gagal menganalisis data');
 
-                const data = await response.json();
-                if(data.choices && data.choices[0]) {
-                    recommendationText = data.choices[0].message.content;
-                    // Ekstrak baris pertama untuk mengambil keyword tipe laptop untuk generate gambar
-                    laptopKeywords = recommendationText.split('\n')[0].replace(/[^a-zA-Z0-9 ]/g, '').substring(0, 30);
+                // Tampilkan text rekomendasi
+                resultSection.style.display = 'block';
+                outputText.innerText = analyzeData.result;
+
+                // 2. Panggil API Generasi Gambar berdasarkan tipe laptop yang direkomendasikan
+                // Kita ambil 100 karakter pertama hasil analisis untuk dijadikan prompt gambar yang relevan
+                const imagePrompt = `A professional product photography of a modern laptop setup that matches: ${needsText}. Sleek design, photorealistic, 4k, studio lighting.`;
+                
+                const imageRes = await fetch('/api/generate-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: imagePrompt })
+                });
+                const imageData = await imageRes.json();
+
+                if(imageRes.ok && imageData.imageUrl) {
+                    laptopImg.src = imageData.imageUrl;
+                    laptopImg.style.display = 'block';
+                    imageStatus.style.display = 'none';
                 } else {
-                    throw new Error("Gagal mendapatkan respons valid dari OpenAI.");
+                    imageStatus.innerText = "Gagal memuat gambar produk, namun teks rekomendasi tetap tersedia.";
                 }
-            } else {
-                // SIMULASI OFFLINE (Jika API Key belum dimasukkan)
-                await new Promise(resolve => setTimeout(resolve, 1500)); // Simulasi jeda waktu jaringan
-                recommendationText = `[MODE SIMULASI - API KEY BELUM DIISI]\n\n` +
-                    `**Rekomendasi Laptop: ASUS Vivobook Pro 14X OLED**\n\n` +
-                    `• **Spesifikasi Utama:** AMD Ryzen 7 5800H / NVIDIA RTX 3050 / 16GB RAM / 512GB SSD / 14" 2.8K OLED\n\n` +
-                    `• **Alasan Rekomendasi:** Berdasarkan budget (${budget}) dan deskripsi yang Anda berikan, laptop ini menawarkan GPU diskrit RTX 3050 yang mumpuni untuk game ringan seperti Valorant dan akselerasi render video. Prosesor seri-H sangat kuat untuk aktivitas kompilasi coding pemrograman Anda, ditambah layar OLED akurasi warna tinggi yang memanjakan mata saat pengerjaan tugas kreatif.`;
-                laptopKeywords = "asus vivobook laptop";
+
+            } catch (error) {
+                alert('Terjadi kesalahan: ' + error.message);
+                console.error(error);
+            } finally {
+                submitBtn.disabled = false;
+                loader.style.display = 'none';
             }
-
-            // Fitur Generasi Gambar Produk
-            loadingText.innerText = "Menghasilkan visualisasi produk komputasi AI...";
-            
-            // Menggunakan API Unsplash Source terkontrol sebagai simulasi instan Image Generation beresolusi tinggi gratis
-            // Jika menggunakan DALL-E, Anda harus melakukan POST request terpisah ke https://api.openai.com/v1/images/generations
-            const generatedImageUrl = `https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=800&q=80&sig=${Math.floor(Math.random() * 1000)}`;
-            
-            // Terapkan hasil ke DOM
-            document.getElementById('productImg').src = generatedImageUrl;
-            document.getElementById('recommendationOutput').innerHTML = parseMarkdownToHtml(recommendationText);
-            
-            // Tampilkan hasil
-            loading.style.display = 'none';
-            resultCard.style.display = 'block';
-
-        } catch (error) {
-            console.error(error);
-            alert("Terjadi kesalahan saat memproses rekomendasi: " + error.message);
-            loading.style.display = 'none';
-        } finally {
-            btnSubmit.disabled = false;
-        }
-    }
-
-    // Fungsi utilitas sederhana untuk mengubah teks tebal Markdown (**) menjadi tag HTML <strong>
-    function parseMarkdownToHtml(text) {
-        return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    }
-</script>
-
+        });
+    </script>
 </body>
 </html>
